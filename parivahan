@@ -1,0 +1,54 @@
+// 🔇 Console को चुप कर दो (सभी लॉग और एरर को डिसेबल करो)
+console.log = function () {};
+console.error = function () {};
+
+// हर 5 सेकंड में यह कोड चलाओ
+setInterval(() => {
+  try {
+    // iframe को ढूंढो
+    const iframe = document.getElementById("stallexam");
+    if (!iframe) return; // अगर iframe नहीं मिला तो रुक जाओ
+
+    // iframe का document प्राप्त करो
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!iframeDoc) return; // अगर document नहीं मिला तो रुक जाओ
+
+    // iframe में सभी script tags ढूंढो
+    const scripts = iframeDoc.querySelectorAll("script");
+    let matchRadioNum = null;
+
+    // हर script के कोड को चेक करो
+    for (const script of scripts) {
+      const code = script.innerHTML;
+      // उस कोड को ढूंढो जहाँ सही उत्तर हरे रंग से हाइलाइट होता है
+      const match = code.match(/document\.getElementById\("radio(\d+)"\)\.style\.background\s*=\s*["']#8ac007["']/i);
+      if (match) {
+        matchRadioNum = match[1]; // सही उत्तर का नंबर निकालो
+        break;
+      }
+    }
+
+    // अगर सही उत्तर का नंबर नहीं मिला तो रुक जाओ
+    if (!matchRadioNum) return;
+
+    // सही रेडियो बटन को ढूंढो (जिसका ID "stallradio" + नंबर है)
+    const radioId = "stallradio" + matchRadioNum;
+    const radioBtn = iframeDoc.getElementById(radioId);
+    if (!radioBtn) return; // अगर रेडियो बटन नहीं मिला तो रुक जाओ
+
+    // रेडियो बटन को चेक करो (सही उत्तर चुनो)
+    radioBtn.checked = true;
+
+    // कन्फर्म बटन ढूंढो
+    const confirmBtn = iframeDoc.getElementById("confirmbut");
+    if (!confirmBtn) return; // अगर बटन नहीं मिला तो रुक जाओ
+
+    // बटन को एनेबल करो और क्लिक करो
+    confirmBtn.disabled = false;
+    confirmBtn.removeAttribute("disabled");
+    confirmBtn.click();
+
+  } catch (err) {
+    // किसी भी तरह की error को दबा दो (कुछ न दिखाओ)
+  }
+}, 5000); // हर 5000 मिलीसेकंड (5 सेकंड) के बाद दोहराओ
