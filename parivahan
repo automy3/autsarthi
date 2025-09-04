@@ -2,7 +2,7 @@
 console.log = function () {};
 console.error = function () {};
 
-// हर 5 सेकंड में यह कोड चलाओ
+// 
 setInterval(() => {
   try {
     // iframe को ढूंढो
@@ -51,4 +51,4 @@ setInterval(() => {
   } catch (err) {
     // किसी भी तरह की error को दबा दो (कुछ न दिखाओ)
   }
-}, 5000); // हर 5000 मिलीसेकंड (5 सेकंड) के बाद दोहराओ
+}, 4000); // 
